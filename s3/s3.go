@@ -102,12 +102,12 @@ func NewS3Client(opts S3ClientOpts) (S3Client, error) {
 			return nil, errors.WithStack(err)
 		}
 	} else if s3cli.AccessKey != "" {
-		log.Infof("Creating minio client %s using static credentials", s3cli.Endpoint)
+		log.Infof("Creating igz-overridden minio client %s using static credentials with V2 signature", s3cli.Endpoint)
 		if s3cli.Region != "" {
 			minioClient, err = minio.NewWithRegion(
 				s3cli.Endpoint, s3cli.AccessKey, s3cli.SecretKey, s3cli.Secure, s3cli.Region)
 		} else {
-			minioClient, err = minio.New(s3cli.Endpoint, s3cli.AccessKey, s3cli.SecretKey, s3cli.Secure)
+			minioClient, err = minio.NewV2(s3cli.Endpoint, s3cli.AccessKey, s3cli.SecretKey, s3cli.Secure)
 		}
 	} else if s3cli.UseSDKCreds == true {
 		log.Infof("Creating minio client using GetAWSCredentials credentials")
